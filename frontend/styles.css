@@ -1,0 +1,60 @@
+body {
+  font-family: system-ui, sans-serif;
+  max-width: 600px;
+  margin: auto;
+  padding: 2rem;
+  background-color: #f5f5f5;
+  color: #333;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: #2c3e50;
+}
+
+#quiz-box {
+  background-color: #fff;
+  padding: 1.5rem;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  margin: 1.5rem 0;
+}
+
+#options {
+  padding: 0;
+  margin-top: 1rem;
+}
+
+#options li {
+  list-style: none;
+  margin-bottom: 0.75rem;
+}
+
+#options li button {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  background-color: #fefefe;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+#options li button:hover {
+  background-color: #e0f0ff;
+  border-color: #007bff;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+#status {
+  margin-top: 1rem;
+  font-weight: bold;
+  text-align: center;
+  color: #007b5e;
+}

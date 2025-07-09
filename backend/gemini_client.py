@@ -1,39 +1,53 @@
-import os, httpx, json
+import os
+import json
 from dotenv import load_dotenv
+from google import genai
+import re
 
-
-
-# Step up TWO levels from backend/ to reach parent of QuizAI/
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
-ENV_PATH = os.path.join(BASE_DIR, ".env")
-
-load_dotenv(dotenv_path=ENV_PATH)
+# Load API key from `.env` located two levels above
+env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".env"))
+load_dotenv(dotenv_path=env_path)
 
 API_KEY = os.getenv("GOOGLE_API_KEY")
-
 if not API_KEY:
-    raise EnvironmentError("GEMINI_API_KEY not found in .env")
+    raise EnvironmentError("GEMINI_API_KEY not found")
 
-MODEL_URL = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={API_KEY}"
-
+# Initialize Gemini client with your syntax
+client = genai.Client(api_key=API_KEY)
 
 async def gre_question(topic: str = "GRE Verbal Reasoning"):
     prompt = f"""
-Generate one GRE-style multiple-choice question for {topic}.
-Return JSON like this:
+    Generate one GRE-style multiple-choice question for {topic}.
 
-{{
-  "question": "What is the meaning of 'laconic'?",
-  "options": ["Verbose", "Talkative", "Concise", "Elaborate"],
-  "correct_answer": "Concise"
-}}
-"""
-    body = {"contents": [{"parts": [{"text": prompt}]}]}
+    Return only plain JSON, no markdown, no explanation:
 
-    async with httpx.AsyncClient(timeout=30) as client:
-        r = await client.post(MODEL_URL, json=body)
-        r.raise_for_status()
-        txt = r.json()["candidates"][0]["content"]["parts"][0]["text"]
-        
+    {{
+    "question": "What is the meaning of 'laconic'?",
+    "options": ["Verbose", "Talkative", "Concise", "Elaborate"],
+    "correct_answer": "Concise"
+    }}
+    """
 
-    return json.loads(txt.strip("`\n "))
+    from anyio.to_thread import run_sync
+
+    def get_response():
+        response = client.models.generate_content(
+            model="gemini-2.5-flash",
+            contents=prompt
+        )
+        return response.text
+
+    raw_text = await run_sync(get_response)
+
+    try:
+
+        # Extract JSON block if wrapped in markdown or backticks
+        match = re.search(r"{[\s\S]+}", raw_text)
+        if not match:
+            raise ValueError(f"Could not extract JSON from response:\n{raw_text}")
+
+        json_str = match.group(0)
+        return json.loads(json_str)
+
+    except Exception as e:
+        raise ValueError(f"Failed to parse Gemini response:\n{raw_text}") from e

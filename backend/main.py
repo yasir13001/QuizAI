@@ -1,9 +1,22 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from gemini_client import gre_question
+from backend.gemini_client import gre_question
+import os
+from fastapi.staticfiles import StaticFiles
+
+
 
 app = FastAPI(title="GRE Quiz API")
+
+
+# Get absolute path to ../frontend relative to main.py
+frontend_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "frontend"))
+
+if not os.path.exists(frontend_path):
+    raise RuntimeError(f"Frontend directory does not exist at: {frontend_path}")
+
+
 
 # CORS
 app.add_middleware(
@@ -23,6 +36,7 @@ async def api_question(topic: str = "GRE Verbal Reasoning"):
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
-
+print("Serving from:", frontend_path)
+print("Files in frontend:", os.listdir(frontend_path))
 # Serve the frontend
-app.mount("/", StaticFiles(directory="../frontend", html=True), name="static")
+app.mount("/", StaticFiles(directory=frontend_path, html=True), name="static")
