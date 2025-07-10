@@ -110,7 +110,7 @@ Here are some features you can implement to further improve the quiz app:
 
 ## 🧑‍💻 Author
 
-Built by \MoonAI — powered by OpenAI + Google Gemini.
+Built by MoonAI — powered by OpenAI + Google Gemini.
 
 ---
 
