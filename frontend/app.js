@@ -1,44 +1,87 @@
-const API = "/api";
-const elQ = document.getElementById("question");
-const elOpts = document.getElementById("options");
-const elNext = document.getElementById("next-btn");
-const elStatus = document.getElementById("status");
+document.addEventListener("DOMContentLoaded", () => {
+  const API = "/api";
+  const elQ = document.getElementById("question");
+  const elOpts = document.getElementById("options");
+  const elNext = document.getElementById("next-btn");
+  const elStatus = document.getElementById("status");
+  const elCategory = document.getElementById("category");
 
-let currentQ = null;
 
-// Initialize session score
-if (!sessionStorage.getItem("score")) {
-  sessionStorage.setItem("score", "0");
-  sessionStorage.setItem("total", "0");
-}
+  let currentQ = null;
 
-elNext.addEventListener("click", async () => {
-  if (currentQ) {
-    const selected = document.querySelector('input[name="opt"]:checked');
-    if (!selected) return alert("Please choose an answer!");
-
-    let score = Number(sessionStorage.getItem("score"));
-    let total = Number(sessionStorage.getItem("total"));
-
-    total++;
-    if (selected.value === currentQ.correct_answer) score++;
-
-    sessionStorage.setItem("score", score);
-    sessionStorage.setItem("total", total);
-    elStatus.textContent = `Score: ${score} / ${total}`;
+  // Initialize score
+  if (!sessionStorage.getItem("score")) {
+    sessionStorage.setItem("score", "0");
+    sessionStorage.setItem("total", "0");
   }
 
-  const res = await fetch(`${API}/question`);
-  currentQ = await res.json();
-  renderQuestion(currentQ);
-});
-
-function renderQuestion(q) {
-  elQ.textContent = q.question;
-  elOpts.innerHTML = "";
-  q.options.forEach(opt => {
-    const li = document.createElement("li");
-    li.innerHTML = `<label><input type="radio" name="opt" value="${opt}"/> ${opt}</label>`;
-    elOpts.appendChild(li);
+  // Start Quiz
+  document.getElementById("load-question").addEventListener("click", async () => {
+    sessionStorage.setItem("score", "0");
+    sessionStorage.setItem("total", "0");
+    elStatus.textContent = "";
+    elNext.style.display = "inline-block";
+    await loadQuestion();
   });
-}
+
+  // Load Next Question
+  elNext.addEventListener("click", async () => {
+    if (currentQ && currentQ.options) {
+      const selected = document.querySelector('input[name="opt"]:checked');
+      if (!selected) {
+        alert("Please choose an answer!");
+        return;
+      }
+
+      let score = Number(sessionStorage.getItem("score"));
+      let total = Number(sessionStorage.getItem("total"));
+
+      total++;
+      if (selected.value === currentQ.correct_answer) {
+        score++;
+      }
+
+      sessionStorage.setItem("score", score);
+      sessionStorage.setItem("total", total);
+
+      elStatus.textContent = `Score: ${score} / ${total}`;
+    }
+
+    await loadQuestion();
+  });
+
+  // Fetch question from backend
+  async function loadQuestion() {
+    console.log("Start Quiz clicked");
+    const category = elCategory.value;
+    console.log("Selected category:", category);
+
+    const response = await fetch(`${API}/question?category=${category}`);
+    const data = await response.json();
+    currentQ = data;
+    console.log("Received question:", data);
+
+    renderQuestion(data);
+  }
+
+  // Render to DOM
+  function renderQuestion(q) {
+    elQ.textContent = q.question;
+    elOpts.innerHTML = "";
+
+    if (q.options) {
+      q.options.forEach(opt => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          <label>
+            <input type="radio" name="opt" value="${opt}"> ${opt}
+          </label>`;
+        elOpts.appendChild(li);
+      });
+      elNext.style.display = "inline-block";
+    } else {
+      elNext.style.display = "none";
+      elOpts.innerHTML = "";
+    }
+  }
+})

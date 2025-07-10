@@ -1,22 +1,16 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException,  Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from backend.gemini_client import gre_question
 import os
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import JSONResponse
+import traceback
+
 
 
 
 app = FastAPI(title="GRE Quiz API")
-
-
-# Get absolute path to ../frontend relative to main.py
-frontend_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "frontend"))
-
-if not os.path.exists(frontend_path):
-    raise RuntimeError(f"Frontend directory does not exist at: {frontend_path}")
-
-
 
 # CORS
 app.add_middleware(
@@ -27,14 +21,21 @@ app.add_middleware(
 )
 
 @app.get("/api/question")
-async def api_question(topic: str = "GRE Verbal Reasoning"):
+async def api_question(request: Request):
     try:
-        return await gre_question(topic)
+        category = request.query_params.get("category", "verbal")
+        result = await gre_question(category)
+        return JSONResponse(content=result)
     except Exception as e:
         print("❌ ERROR in /api/question:", str(e))
-        import traceback
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
+
+# Get absolute path to ../frontend relative to main.py
+frontend_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "frontend"))
+
+if not os.path.exists(frontend_path):
+    raise RuntimeError(f"Frontend directory does not exist at: {frontend_path}")
 
 print("Serving from:", frontend_path)
 print("Files in frontend:", os.listdir(frontend_path))

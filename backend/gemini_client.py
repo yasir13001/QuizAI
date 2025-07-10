@@ -15,32 +15,37 @@ if not API_KEY:
 # Initialize Gemini client with your syntax
 client = genai.Client(api_key=API_KEY)
 
-async def gre_question(topic: str = "GRE Verbal Reasoning"):
-    prompt = f"""
-    Generate one GRE-style multiple-choice question for {topic}.
+async def gre_question(category="verbal"):
 
-    Return only plain JSON, no markdown, no explanation:
-
+    re_format = f""""Return only plain JSON, no markdown, no explanation:
     {{
     "question": "What is the meaning of 'laconic'?",
     "options": ["Verbose", "Talkative", "Concise", "Elaborate"],
     "correct_answer": "Concise"
-    }}
-    """
+    }}"""
+    if category == "verbal":
+        prompt = f"""Generate a GRE Verbal Reasoning question with 4-5 options and one correct answer.
+        {re_format}"""
+        
+       
+    elif category == "quant":
+        prompt = f"""Generate a GRE Quantitative Reasoning math question with 4-5 options and one correct answer.
+            {re_format}"""
+    elif category == "analytical":
+        prompt = f"""Generate a GRE Analytical Writing prompt. Format as JSON with one field 'question' only.
+         {re_format}"""
+    else:
+        prompt = f"""Generate a general GRE question with multiple choice options. Format as JSON. 
+        {re_format}"""
 
-    from anyio.to_thread import run_sync
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents=prompt
+    )
 
-    def get_response():
-        response = client.models.generate_content(
-            model="gemini-2.5-flash",
-            contents=prompt
-        )
-        return response.text
+    raw_text = response.text
 
-    raw_text = await run_sync(get_response)
-
-    try:
-
+    try:       
         # Extract JSON block if wrapped in markdown or backticks
         match = re.search(r"{[\s\S]+}", raw_text)
         if not match:
@@ -48,6 +53,5 @@ async def gre_question(topic: str = "GRE Verbal Reasoning"):
 
         json_str = match.group(0)
         return json.loads(json_str)
-
-    except Exception as e:
-        raise ValueError(f"Failed to parse Gemini response:\n{raw_text}") from e
+    except Exception:
+        raise ValueError(f"Failed to parse Gemini response:\n{raw_text}")
