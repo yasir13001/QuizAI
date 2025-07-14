@@ -5,6 +5,8 @@ document.addEventListener("DOMContentLoaded", () => {
   const elNext = document.getElementById("next-btn");
   const elStatus = document.getElementById("status");
   const elCategory = document.getElementById("category");
+  const elSpinner = document.getElementById("spinner");
+  const elExportButton = document.getElementById("export-results");
 
 
   let currentQ = null;
@@ -50,17 +52,32 @@ document.addEventListener("DOMContentLoaded", () => {
     await loadQuestion();
   });
 
+  // Export Results
+  elExportButton.addEventListener("click", () => {
+    const score = sessionStorage.getItem("score");
+    const total = sessionStorage.getItem("total");
+    const resultsText = `GRE Quiz Results:\nScore: ${score} / ${total}`;
+    const blob = new Blob([resultsText], { type: "text/plain" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "gre_quiz_results.txt";
+    a.click();
+  });
+
   // Fetch question from backend
   async function loadQuestion() {
     console.log("Start Quiz clicked");
     const category = elCategory.value;
     console.log("Selected category:", category);
+    elSpinner.style.display = "block";
 
     const response = await fetch(`${API}/question?category=${category}`);
     const data = await response.json();
     currentQ = data;
     console.log("Received question:", data);
 
+    elSpinner.style.display = "none";
     renderQuestion(data);
   }
 
