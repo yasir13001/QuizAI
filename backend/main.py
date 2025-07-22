@@ -24,7 +24,7 @@ app.add_middleware(
 async def api_question(request: Request):
     try:
         category = request.query_params.get("category", "verbal")
-        result = await gre_question(category)
+        result = gre_question(category)  # Remove 'await'
         return JSONResponse(content=result)
     except Exception as e:
         print("❌ ERROR in /api/question:", str(e))

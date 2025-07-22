@@ -16,25 +16,25 @@ if not API_KEY:
 configure(api_key=API_KEY)
 model = GenerativeModel("gemini-2.5-flash")
 
-async def gre_question(category="verbal"):
 
-    re_format = f""""Return only plain JSON, no markdown, no explanation:
-    {{
+def gre_question(category="verbal"):
+    re_format = '''Return only plain JSON, no markdown, no explanation:
+    {
     "question": "What is the meaning of 'laconic'?",
     "options": ["Verbose", "Talkative", "Concise", "Elaborate"],
     "correct_answer": "Concise"
-    }}"""
+    }'''
     if category == "verbal":
         prompt = f"""Generate a GRE Verbal Reasoning question with 4-5 options and one correct answer.
         {re_format}"""
     elif category == "quant":
         prompt = f"""Generate a GRE Quantitative Reasoning math question with 4-5 options and one correct answer.
-            {re_format}"""
+        {re_format}"""
     elif category == "analytical":
         prompt = f"""Generate a GRE Analytical Writing prompt. Format as JSON with one field 'question' only.
-         {re_format}"""
+        {re_format}"""
     else:
-        prompt = f"""Generate a general GRE question with multiple choice options. Format as JSON. 
+        prompt = f"""Generate a general GRE question with multiple choice options. Format as JSON.
         {re_format}"""
 
     response = model.generate_content(prompt)
