@@ -8,28 +8,26 @@
 <body>
   <main id="app">
     <h1>GRE Quiz App</h1>
-
     <label for="category">Choose a category:</label>
     <select id="category">
       <option value="verbal">Verbal Reasoning</option>
       <option value="quant">Quantitative Reasoning</option>
       <option value="analytical">Analytical Writing</option>
     </select>
-
     <button id="load-question">Start Quiz</button>
-
     <div id="spinner" style="display: none;">Loading...</div>
-
     <section id="quiz-box">
+      <div id="timer"></div>
       <p id="question">Click "Start Quiz" to begin.</p>
       <ul id="options"></ul>
     </section>
-
     <button id="next-btn" style="display: none;">Next</button>
     <p id="status"></p>
     <button id="export-results">Export Results</button>
+    <button id="restart-quiz">Restart Quiz</button>
+    <button id="show-final-score">Show Final Score</button>
+    <button id="review-answers">Review Answers</button>
   </main>
-
- <script src="/app.js"></script>
+  <script type="module" src="/app.js"></script>
 </body>
 </html>
