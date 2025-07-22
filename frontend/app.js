@@ -7,8 +7,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const elCategory = document.getElementById("category");
   const elSpinner = document.getElementById("spinner");
   const elExportButton = document.getElementById("export-results");
-
-
   let currentQ = null;
 
   // Initialize score
@@ -26,28 +24,35 @@ document.addEventListener("DOMContentLoaded", () => {
     await loadQuestion();
   });
 
-  // Load Next Question
+  // Next Question logic
   elNext.addEventListener("click", async () => {
-    if (currentQ && currentQ.options) {
-      const selected = document.querySelector('input[name="opt"]:checked');
-      if (!selected) {
-        alert("Please choose an answer!");
-        return;
-      }
+    if (!currentQ || !currentQ.options) return;
 
-      let score = Number(sessionStorage.getItem("score"));
-      let total = Number(sessionStorage.getItem("total"));
-
-      total++;
-      if (selected.value === currentQ.correct_answer) {
-        score++;
-      }
-
-      sessionStorage.setItem("score", score);
-      sessionStorage.setItem("total", total);
-
-      elStatus.textContent = `Score: ${score} / ${total}`;
+    const selected = document.querySelector('input[name="opt"]:checked');
+    if (!selected) {
+      alert("Please choose an answer!");
+      return;
     }
+
+    // Save answer to backend
+    await fetch(`${API}/answer`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        question: currentQ.question,
+        user_answer: selected.value
+      })
+    });
+
+    let score = Number(sessionStorage.getItem("score"));
+    let total = Number(sessionStorage.getItem("total"));
+    total++;
+    if (selected.value === currentQ.correct_answer) {
+      score++;
+    }
+    sessionStorage.setItem("score", score);
+    sessionStorage.setItem("total", total);
+    elStatus.textContent = `Score: ${score} / ${total}`;
 
     await loadQuestion();
   });
@@ -65,34 +70,46 @@ document.addEventListener("DOMContentLoaded", () => {
     a.click();
   });
 
+  // View Question History (console)
+  document.getElementById("view-history").addEventListener("click", async () => {
+    const res = await fetch(`${API}/history`);
+    const data = await res.json();
+    console.log("📜 Question History:", data);
+    alert("History logged in console!");
+  });
+
+  // View Analytics (console)
+  document.getElementById("view-analytics").addEventListener("click", async () => {
+    const res = await fetch(`${API}/analytics`);
+    const data = await res.json();
+    console.log("📊 Analytics Per Category:", data);
+    alert("Analytics logged in console!");
+  });
+
   // Fetch question from backend
   async function loadQuestion() {
-    console.log("Start Quiz clicked");
     const category = elCategory.value;
-    console.log("Selected category:", category);
     elSpinner.style.display = "block";
-
     const response = await fetch(`${API}/question?category=${category}`);
     const data = await response.json();
     currentQ = data;
-    console.log("Received question:", data);
-
     elSpinner.style.display = "none";
     renderQuestion(data);
   }
 
-  // Render to DOM
+  // Render question and options as radio buttons
   function renderQuestion(q) {
-    elQ.textContent = q.question;
+    elQ.textContent = q.question || "";
     elOpts.innerHTML = "";
-
     if (q.options) {
       q.options.forEach(opt => {
         const li = document.createElement("li");
         li.innerHTML = `
           <label>
-            <input type="radio" name="opt" value="${opt}"> ${opt}
-          </label>`;
+            <input type="radio" name="opt" value="${opt}">
+            ${opt}
+          </label>
+        `;
         elOpts.appendChild(li);
       });
       elNext.style.display = "inline-block";
@@ -101,4 +118,5 @@ document.addEventListener("DOMContentLoaded", () => {
       elOpts.innerHTML = "";
     }
   }
-})
+});
+

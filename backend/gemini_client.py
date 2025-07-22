@@ -8,9 +8,11 @@ from google.generativeai import configure, GenerativeModel
 env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".env"))
 load_dotenv(dotenv_path=env_path)
 
+env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".env"))
+
 API_KEY = os.getenv("GOOGLE_API_KEY")
-if not API_KEY:
-    raise EnvironmentError("GOOGLE_API_KEY not found")
+# if not API_KEY:
+#     raise EnvironmentError("GOOGLE_API_KEY not found")
 
 # Configure Gemini client
 configure(api_key=API_KEY)
