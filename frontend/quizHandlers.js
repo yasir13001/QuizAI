@@ -114,3 +114,24 @@ export function showFinalScore() {
 export function reviewAnswers() {
   showReview();
 }
+//keyboard shortcuts
+function handleKeyPress(e) {
+  const key = e.key.toUpperCase();
+  if (["A", "B", "C", "D"].includes(key)) {
+    const options = document.querySelectorAll('input[name="opt"]');
+    const index = key.charCodeAt(0) - 65; // A = 0, B = 1...
+    if (options[index]) {
+      options[index].checked = true;
+    }
+  }
+
+  // Optional: allow "Enter" to act like "Next"
+  if (e.key === "Enter") {
+    const nextBtn = document.getElementById("next-btn");
+    if (nextBtn && nextBtn.style.display !== "none") {
+      nextBtn.click();
+    }
+  }
+}
+
+document.addEventListener("keydown", handleKeyPress);
