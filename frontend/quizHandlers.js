@@ -114,3 +114,63 @@ export function showFinalScore() {
 export function reviewAnswers() {
   showReview();
 }
+// Keyboard shortcuts
+function handleKeyPress(e) {
+  const key = e.key.toUpperCase();
+  if (["A", "B", "C", "D"].includes(key)) {
+    const options = document.querySelectorAll('input[name="opt"]');
+    const index = key.charCodeAt(0) - 65;
+    if (options[index]) {
+      options[index].checked = true;
+    }
+  }
+
+  if (e.key === "Enter") {
+    const nextBtn = document.getElementById("next-btn");
+    if (nextBtn && nextBtn.style.display !== "none") {
+      nextBtn.click();
+    }
+  }
+}
+
+document.addEventListener("keydown", handleKeyPress);
+
+// Add option labels (A/B/C/D)
+function addOptionLabels() {
+  const options = document.querySelectorAll('input[name="opt"]');
+  const labels = ["A", "B", "C", "D"];
+
+  options.forEach((option, index) => {
+    const parent = option.parentNode;
+
+    // Remove old label if it exists (to prevent duplicates)
+    const existingLabel = parent.querySelector(".opt-label");
+    if (existingLabel) {
+      existingLabel.remove();
+    }
+
+    // Create new label
+    const labelSpan = document.createElement("span");
+    labelSpan.className = "opt-label";
+    labelSpan.textContent = `${labels[index]}. `;
+    labelSpan.style.fontWeight = "bold";
+
+    parent.insertBefore(labelSpan, option);
+  });
+}
+// Call this function after rendering options
+function patchRenderLabels() {
+  const optionsContainer = document.getElementById("options");
+
+  if (!optionsContainer) return;
+
+  const observer = new MutationObserver(() => {
+    setTimeout(addOptionLabels, 0);  // Ensures DOM settles before labeling
+  });
+
+  observer.observe(optionsContainer, {
+    childList: true,
+    subtree: true,
+  });
+}
+patchRenderLabels(); 
