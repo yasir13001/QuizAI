@@ -142,23 +142,35 @@ function addOptionLabels() {
 
   options.forEach((option, index) => {
     const parent = option.parentNode;
-    const hasLabel = parent.querySelector('.opt-label');
 
-    if (!hasLabel) {
-      const labelSpan = document.createElement("span");
-      labelSpan.className = "opt-label";
-      labelSpan.textContent = `${labels[index]}. `;
-      labelSpan.style.fontWeight = "bold";
-      parent.insertBefore(labelSpan, option);
+    // Remove old label if it exists (to prevent duplicates)
+    const existingLabel = parent.querySelector(".opt-label");
+    if (existingLabel) {
+      existingLabel.remove();
     }
+
+    // Create new label
+    const labelSpan = document.createElement("span");
+    labelSpan.className = "opt-label";
+    labelSpan.textContent = `${labels[index]}. `;
+    labelSpan.style.fontWeight = "bold";
+
+    parent.insertBefore(labelSpan, option);
   });
 }
+// Call this function after rendering options
+function patchRenderLabels() {
+  const optionsContainer = document.getElementById("options");
 
-setTimeout(addOptionLabels, 100);
+  if (!optionsContainer) return;
 
-const nextBtn = document.getElementById("next-btn");
-if (nextBtn) {
-  nextBtn.addEventListener("click", () => {
-    setTimeout(addOptionLabels, 100);
+  const observer = new MutationObserver(() => {
+    setTimeout(addOptionLabels, 0);  // Ensures DOM settles before labeling
+  });
+
+  observer.observe(optionsContainer, {
+    childList: true,
+    subtree: true,
   });
 }
+patchRenderLabels(); 
