@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from google.generativeai import configure, GenerativeModel
 
 # Load API key from `.env` located two levels above (QuizAI/.env)
-env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".env"))
+env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..","..", ".env"))
 load_dotenv(dotenv_path=env_path)
 
 API_KEY = os.getenv("GOOGLE_API_KEY")
