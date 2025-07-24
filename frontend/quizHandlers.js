@@ -114,18 +114,17 @@ export function showFinalScore() {
 export function reviewAnswers() {
   showReview();
 }
-//keyboard shortcuts
+// Keyboard shortcuts
 function handleKeyPress(e) {
   const key = e.key.toUpperCase();
   if (["A", "B", "C", "D"].includes(key)) {
     const options = document.querySelectorAll('input[name="opt"]');
-    const index = key.charCodeAt(0) - 65; // A = 0, B = 1...
+    const index = key.charCodeAt(0) - 65;
     if (options[index]) {
       options[index].checked = true;
     }
   }
 
-  // Optional: allow "Enter" to act like "Next"
   if (e.key === "Enter") {
     const nextBtn = document.getElementById("next-btn");
     if (nextBtn && nextBtn.style.display !== "none") {
@@ -135,3 +134,31 @@ function handleKeyPress(e) {
 }
 
 document.addEventListener("keydown", handleKeyPress);
+
+// Add option labels (A/B/C/D)
+function addOptionLabels() {
+  const options = document.querySelectorAll('input[name="opt"]');
+  const labels = ["A", "B", "C", "D"];
+
+  options.forEach((option, index) => {
+    const parent = option.parentNode;
+    const hasLabel = parent.querySelector('.opt-label');
+
+    if (!hasLabel) {
+      const labelSpan = document.createElement("span");
+      labelSpan.className = "opt-label";
+      labelSpan.textContent = `${labels[index]}. `;
+      labelSpan.style.fontWeight = "bold";
+      parent.insertBefore(labelSpan, option);
+    }
+  });
+}
+
+setTimeout(addOptionLabels, 100);
+
+const nextBtn = document.getElementById("next-btn");
+if (nextBtn) {
+  nextBtn.addEventListener("click", () => {
+    setTimeout(addOptionLabels, 100);
+  });
+}
