@@ -5,8 +5,9 @@ export async function loadQuestion() {
   const elSpinner = document.getElementById("spinner");
   elSpinner.style.display = "block";
   const category = document.getElementById("category").value;
+  const difficulty = document.getElementById("difficulty").value;
   try {
-    const response = await fetch(`/api/question?category=${category}`);
+    const response = await fetch(`/api/question?category=${category}&difficulty=${difficulty}`);
     const data = await response.json();
     window.currentQ = data;
     renderQuestion(data);
