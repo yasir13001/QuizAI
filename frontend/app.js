@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 document.addEventListener("DOMContentLoaded", () => {
   const API = "/api";
   const elQ = document.getElementById("question");
@@ -153,7 +152,6 @@ function renderHistory(history) {
   }
 });
 
-=======
 import { startQuiz, nextQuestion, exportResults, restartQuiz, showFinalScore, reviewAnswers } from './quizHandlers.js';
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -176,4 +174,3 @@ document.addEventListener("DOMContentLoaded", () => {
     themeToggleBtn.textContent = isDarkMode ? 'Light Mode' : 'Dark Mode';
   });
 });
->>>>>>> 11a24307321cc60d3df25a8ccf0120db128c819d

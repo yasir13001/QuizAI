@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 from fastapi import FastAPI, HTTPException,  Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -114,7 +113,6 @@ app.mount("/static", StaticFiles(directory=FRONTEND_DIR ), name="static")
 @app.get("/")
 async def server_index():
     return FileResponse(FRONTEND_DIR / "index.html")
-=======
 from fastapi import FastAPI, HTTPException,  Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -158,4 +156,3 @@ print("Serving from:", frontend_path)
 print("Files in frontend:", os.listdir(frontend_path))
 # Serve the frontend
 app.mount("/", StaticFiles(directory=frontend_path, html=True), name="static")
->>>>>>> 11a24307321cc60d3df25a8ccf0120db128c819d

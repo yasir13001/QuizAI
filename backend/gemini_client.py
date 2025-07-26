@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import os
 import json
 import re
@@ -51,7 +50,6 @@ async def gre_question(category="verbal"):
         return json.loads(json_str)
     except Exception:
         raise ValueError(f"Failed to parse Gemini response:\n{raw_text}")
-=======
 import os
 import json
 import re
@@ -107,4 +105,3 @@ def gre_question(category="verbal"):
         return json.loads(json_str)
     except Exception as e:
         raise ValueError(f"Failed to parse Gemini response:\n{raw_text}\nError: {str(e)}")
->>>>>>> 11a24307321cc60d3df25a8ccf0120db128c819d
