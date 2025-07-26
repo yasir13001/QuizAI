@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <title>GRE Quiz</title>
-  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/static/styles.css" />
 </head>
 <body>
   <main id="app">
@@ -17,6 +17,7 @@
     </select>
 
     <button id="load-question">Start Quiz</button>
+    <button id="next-btn" style="display: none;">Next</button>
 
     <div id="spinner" style="display: none;">Loading...</div>
 
@@ -25,15 +26,16 @@
       <ul id="options"></ul>
     </section>
 
-    <button id="next-btn" style="display: none;">Next</button>
     <p id="status"></p>
+    <h3 id="final-score"></h3>
+    <div id="history-box"></div>
+
     <button id="export-results">Export Results</button>
-    <button id="view-history"> View Question History (Console)</button>
-    <button id="view-analytics"> View Analytics (Console)</button>
-
-
+    <button id="view-history"> View Question History</button>
+    <button id="view-analytics"> View Analytics</button>
   </main>
 
- <script src="/app.js"></script>
+  <script src="/static/app.js"></script>
 </body>
 </html>
+

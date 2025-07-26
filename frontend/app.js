@@ -8,21 +8,40 @@ document.addEventListener("DOMContentLoaded", () => {
   const elSpinner = document.getElementById("spinner");
   const elExportButton = document.getElementById("export-results");
   let currentQ = null;
+  console.log("DOM Loaded!");
 
   // Initialize score
-  if (!sessionStorage.getItem("score")) {
-    sessionStorage.setItem("score", "0");
-    sessionStorage.setItem("total", "0");
-  }
+  document.getElementById("load-question").addEventListener("click", async () => {
+  sessionStorage.setItem("score", "0");
+  sessionStorage.setItem("total", "0");
+  elStatus.textContent = "";
+  elNext.style.display = "inline-block";
+  await loadQuestion();
+});
+
 
   // Start Quiz
-  document.getElementById("load-question").addEventListener("click", async () => {
-    sessionStorage.setItem("score", "0");
-    sessionStorage.setItem("total", "0");
-    elStatus.textContent = "";
-    elNext.style.display = "inline-block";
-    await loadQuestion();
-  });
+  async function loadQuestion() {
+  try {
+    const category = elCategory.value;
+    elSpinner.style.display = "block";
+
+    const response = await fetch(`${API}/question?category=${category}`);
+    if (!response.ok) throw new Error(`API Error: ${response.status}`);
+
+    const data = await response.json();
+    currentQ = data;
+    renderQuestion(data);
+  } catch (err) {
+    console.error("❌ loadQuestion failed:", err);
+    elQ.textContent = "⚠️ Failed to load question. Check console.";
+    elOpts.innerHTML = "";
+    elNext.style.display = "none";
+  } finally {
+    elSpinner.style.display = "none";
+  }
+}
+
 
   // Next Question logic
   elNext.addEventListener("click", async () => {
@@ -72,11 +91,33 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // View Question History (console)
   document.getElementById("view-history").addEventListener("click", async () => {
-    const res = await fetch(`${API}/history`);
-    const data = await res.json();
-    console.log("📜 Question History:", data);
-    alert("History logged in console!");
-  });
+  const res = await fetch(`${API}/history`);
+  const data = await res.json();
+  renderHistory(data);
+});
+
+function renderHistory(history) {
+  const container = document.getElementById("history-box");
+  if (!history.length) {
+    container.innerHTML = "<p>No history found.</p>";
+    return;
+  }
+
+  const correctCount = history.filter(q => q.user_answer === q.correct_answer).length;
+  const totalCount = history.length;
+
+  document.getElementById("final-score").innerText = `Final Score: ${correctCount} / ${totalCount}`;
+
+  container.innerHTML = history.map((q, i) => `
+    <div style="margin-bottom:10px; padding:8px; border:1px solid #ddd;">
+      <strong>Q${i + 1}:</strong> ${q.question}<br>
+      <strong>Your Answer:</strong> ${q.user_answer || "Not answered"}<br>
+      <strong>Correct Answer:</strong> ${q.correct_answer}<br>
+      <strong>Category:</strong> ${q.category}<br>
+      <small>${new Date(q.timestamp).toLocaleString()}</small>
+    </div>
+  `).join("");
+}
 
   // View Analytics (console)
   document.getElementById("view-analytics").addEventListener("click", async () => {
@@ -86,16 +127,6 @@ document.addEventListener("DOMContentLoaded", () => {
     alert("Analytics logged in console!");
   });
 
-  // Fetch question from backend
-  async function loadQuestion() {
-    const category = elCategory.value;
-    elSpinner.style.display = "block";
-    const response = await fetch(`${API}/question?category=${category}`);
-    const data = await response.json();
-    currentQ = data;
-    elSpinner.style.display = "none";
-    renderQuestion(data);
-  }
 
   // Render question and options as radio buttons
   function renderQuestion(q) {
@@ -113,6 +144,7 @@ document.addEventListener("DOMContentLoaded", () => {
         elOpts.appendChild(li);
       });
       elNext.style.display = "inline-block";
+      elNext.disabled = false;
     } else {
       elNext.style.display = "none";
       elOpts.innerHTML = "";

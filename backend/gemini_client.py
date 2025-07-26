@@ -2,7 +2,7 @@ import os
 import json
 import re
 from dotenv import load_dotenv
-from google.generativeai import configure, GenerativeModel
+from google.generativeai import configure,  GenerativeModel
 
 # Load API key from `.env` located two levels above
 env_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".env"))
@@ -15,7 +15,7 @@ API_KEY = os.getenv("GOOGLE_API_KEY")
 #     raise EnvironmentError("GOOGLE_API_KEY not found")
 
 # Configure Gemini client
-configure(api_key=API_KEY)
+configure(api_key="AIzaSyB-0BXOjpPfPeRTsFZxv0i2mb-F-9qg8kc")
 model = GenerativeModel("gemini-2.5-flash")
 
 async def gre_question(category="verbal"):
@@ -40,7 +40,7 @@ async def gre_question(category="verbal"):
         {re_format}"""
 
     response = model.generate_content(prompt)
-    raw_text = response.text
+    raw_text = response.text.strip()
 
     try:
         match = re.search(r"{[\s\S]+}", raw_text)

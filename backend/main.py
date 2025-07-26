@@ -5,6 +5,7 @@ from .gemini_client import gre_question
 import os
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse
 import traceback
 from typing import Dict,List
 from datetime import datetime
@@ -12,6 +13,7 @@ from fastapi.responses import StreamingResponse
 import io
 import csv
 import traceback 
+from pathlib import Path
 
 
 user_history : Dict[str, List[dict]] = {}
@@ -27,20 +29,19 @@ app.add_middleware(
 
 @app.get("/api/question")
 async def api_question(request: Request):
-    client_ip = request.client.host
-    category = request.query_params.get("category", "verbal")
-
-    if client_ip not in user_history:
-        user_history[client_ip]= []
+    print("📥 /api/question hit")
+    try:
+        category = request.query_params.get("category", "verbal")
+        print(f"📦 Category: {category}")
 
         question_data = await gre_question(category)
-        question_data['timestamp']= datetime.utcnow().isoformat()
-        question_data['category']= category
-        question_data['user_answer'] = None
-        user_history[client_ip].append(question_data)
-
+        print("✅ Gemini response received")
+        
         return JSONResponse(content=question_data)
-
+    except Exception as e:
+        print("❌ ERROR in /api/question:", str(e))
+        import traceback; traceback.print_exc()
+        raise HTTPException(status_code=500, detail="Internal Server Error")
     
 @app.post("/api/answer")
 async def api_submit_answer(request: Request):
@@ -106,4 +107,9 @@ frontend_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "f
 if not os.path.exists(frontend_path):
     raise RuntimeError(f"Frontend directory does not exist at: {frontend_path}")
 
-app.mount("/", StaticFiles(directory=frontend_path, html=True), name="static")
+BASE_DIR = Path(__file__).resolve().parent
+FRONTEND_DIR = BASE_DIR.parent / "frontend"
+app.mount("/static", StaticFiles(directory=FRONTEND_DIR ), name="static")
+@app.get("/")
+async def server_index():
+    return FileResponse(FRONTEND_DIR / "index.html")
