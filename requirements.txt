@@ -1,0 +1,4 @@
+fastapi
+uvicorn
+httpx
+python-dotenv       # load the Gemini key from .env
