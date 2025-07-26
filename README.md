@@ -47,7 +47,7 @@ cd QuizAI
 Create a virtual environment and install required packages:
 
 ```bash
-pip install fastapi uvicorn google-generativeai
+pip install fastapi uvicorn python-dotenv google-generativeai
 ```
 
 ### 3. Set your Gemini API key
@@ -74,39 +74,7 @@ Visit: [http://localhost:8080](http://localhost:8080)
 
 ---
 
-## 💡 Optional Enhancements
 
-Here are some features you can implement to further improve the quiz app:
-
-### ✅ Add "Restart Quiz" or "Show Final Score" Button
-
-* Display a summary at the end of quiz.
-* Option to reset session storage.
-
-### ⏱️ Add Timer per Question
-
-* Track how long the user takes for each question.
-* Use `setTimeout()` and countdown logic in `app.js`.
-
-### 📜 Track Question History
-
-* Save asked questions in `sessionStorage`.
-* Enable review mode for previous answers.
-
-### 📊 Analytics per Category
-
-* Show performance in Verbal vs Quant.
-* Display as simple text or graphs (if adding chart libs later).
-
-### 📤 Export Results
-
-* Let users download their quiz result as a `.txt` or `.csv` file.
-
-### 🔄 Loading Spinner or Feedback
-
-* Display a spinner while waiting for Gemini response.
-
----
 
 ## 🧑‍💻 Author
 

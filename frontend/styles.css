@@ -1,23 +1,37 @@
+:root {
+  --background-color: #f5f5f5;
+  --text-color: #333;
+  --header-color: #2c3e50;
+  --quiz-box-bg: #fff;
+  --quiz-box-shadow: rgba(0, 0, 0, 0.1);
+  --option-bg: #fefefe;
+  --option-hover-bg: #e0f0ff;
+  --option-hover-border: #007bff;
+  --status-color: #007b5e;
+}
+
 body {
   font-family: system-ui, sans-serif;
   max-width: 600px;
   margin: auto;
   padding: 2rem;
-  background-color: #f5f5f5;
-  color: #333;
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 h1 {
   text-align: center;
   margin-bottom: 1.5rem;
-  color: #2c3e50;
+  color: var(--header-color); /* Use CSS variable here */
+  transition: color 0.3s ease;
 }
 
 #quiz-box {
-  background-color: #fff;
+  background-color: var(--quiz-box-bg);
   padding: 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px var(--quiz-box-shadow);
   margin: 1.5rem 0;
 }
 
@@ -36,15 +50,15 @@ h1 {
   padding: 0.75rem;
   font-size: 1rem;
   border: 1px solid #ccc;
-  background-color: #fefefe;
+  background-color: var(--option-bg);
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.2s ease, border-color 0.2s ease;
 }
 
 #options li button:hover {
-  background-color: #e0f0ff;
-  border-color: #007bff;
+  background-color: var(--option-hover-bg);
+  border-color: var(--option-hover-border);
 }
 
 button:disabled {
@@ -56,25 +70,56 @@ button:disabled {
   margin-top: 1rem;
   font-weight: bold;
   text-align: center;
-  color: #007b5e;
+  color: var(--status-color);
 }
 
 #spinner {
-  display: none; /* Hidden by default */
+  display: none;
   border: 8px solid #f3f3f3;
   border-top: 8px solid #3498db;
   border-radius: 50%;
   width: 40px;
   height: 40px;
   animation: spin 1s linear infinite;
-  margin: 20px auto; /* Center the spinner */
+  margin: 20px auto;
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* DARK MODE VARIABLES */
+body.dark-mode {
+  --background-color: #1e1e1e;
+  --text-color: #f5f5f5;
+  --header-color: #d2d8dd;  /* Change Header color in Dark Mode */
+  --quiz-box-bg: #2c2c2c;
+  --quiz-box-shadow: rgba(0, 0, 0, 0.6);
+  --option-bg: #333;
+  --option-hover-bg: #444;
+  --option-hover-border: #66b2ff;
+  --status-color: #66ff99;
+}
+
+#theme-toggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #1e1e1e;  /* Dark button for Light Mode */
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body.dark-mode #theme-toggle {
+  background-color: #f5f5f5;  /* Light button for Dark Mode */
+  color: #1e1e1e;
+}
+
+#theme-toggle:hover {
+  opacity: 0.85;
 }
