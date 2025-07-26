@@ -3,6 +3,47 @@
 <head>
   <meta charset="UTF-8" />
   <title>GRE Quiz</title>
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <main id="app">
+    <h1>GRE Quiz App</h1>
+
+    <label for="category">Choose a category:</label>
+    <select id="category">
+      <option value="verbal">Verbal Reasoning</option>
+      <option value="quant">Quantitative Reasoning</option>
+      <option value="analytical">Analytical Writing</option>
+    </select>
+
+    <button id="load-question">Start Quiz</button>
+    <button id="next-btn" style="display: none;">Next</button>
+
+    <div id="spinner" style="display: none;">Loading...</div>
+
+    <section id="quiz-box">
+      <p id="question">Click "Start Quiz" to begin.</p>
+      <ul id="options"></ul>
+    </section>
+
+    <p id="status"></p>
+    <h3 id="final-score"></h3>
+    <div id="history-box"></div>
+
+    <button id="export-results">Export Results</button>
+    <button id="view-history"> View Question History</button>
+    <button id="view-analytics"> View Analytics</button>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>GRE Quiz</title>
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body>
