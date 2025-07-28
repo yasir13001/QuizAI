@@ -1,4 +1,28 @@
-fastapi
-uvicorn
-httpx
-python-dotenv       # load the Gemini key from .env
+annotated-types==0.7.0
+anyio==4.9.0
+cachetools==5.5.2
+certifi==2025.7.14
+charset-normalizer==3.4.2
+click==8.2.1
+fastapi==0.116.1
+google-auth==2.40.3
+google-genai==1.27.0
+h11==0.16.0
+httpcore==1.0.9
+httpx==0.28.1
+idna==3.10
+pyasn1==0.6.1
+pyasn1_modules==0.4.2
+pydantic==2.11.7
+pydantic_core==2.33.2
+python-dotenv==1.1.1 # load the Gemini key from .env
+requests==2.32.4
+rsa==4.9.1
+sniffio==1.3.1
+starlette==0.47.2
+tenacity==8.5.0
+typing-inspection==0.4.1
+typing_extensions==4.14.1
+urllib3==2.5.0
+uvicorn==0.35.0
+websockets==15.0.1
