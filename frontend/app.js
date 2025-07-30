@@ -1,4 +1,4 @@
-import { startQuiz, nextQuestion, exportResults, restartQuiz, showFinalScore, reviewAnswers } from './quizHandlers.js';
+import { startQuiz, nextQuestion, exportResults, restartQuiz, showFinalScore, reviewAnswers, showHistory } from './quizHandlers.js';
 
 document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("load-question").addEventListener("click", startQuiz);
@@ -7,6 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("restart-quiz").addEventListener("click", restartQuiz);
   document.getElementById("show-final-score").addEventListener("click", showFinalScore);
   document.getElementById("review-answers").addEventListener("click", reviewAnswers);
+  document.getElementById("showHistory").addEventListener("click", showHistory);
 
   const themeToggleBtn = document.getElementById('theme-toggle');
 

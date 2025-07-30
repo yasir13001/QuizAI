@@ -97,6 +97,19 @@ export function exportResults() {
   a.click();
 }
 
+//to show history
+export function showHistory(history,) {
+  const historyDiv = document.getElementById("history");
+
+  historyDiv.innerHTML = "<h3>Answer History:</h3>";
+  history.forEach((entry, index) => {
+    const line = document.createElement("p");
+    line.textContent = `Q${index + 1}: ${entry.question} - Your Answer: ${entry.userAnswer} - Correct: ${entry.correct}`;
+    historyDiv.appendChild(line);
+  });
+
+}
+
 export function restartQuiz() {
   sessionStorage.clear();
   questionHistory = [];
