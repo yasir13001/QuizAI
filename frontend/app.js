@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("restart-quiz").addEventListener("click", restartQuiz);
   document.getElementById("show-final-score").addEventListener("click", showFinalScore);
   document.getElementById("review-answers").addEventListener("click", reviewAnswers);
-  document.getElementById("showHistory").addEventListener("click", showHistory);
+  document.getElementById("history").addEventListener("click", showHistory);
 
   const themeToggleBtn = document.getElementById('theme-toggle');
 
