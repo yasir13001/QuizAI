@@ -6,6 +6,14 @@ __pycache__/
 # C extensions
 *.so
 
+# Environment and system files
+.env
+myenv/
+venv/
+__pycache__/
+*.pyc
+.DS_Store
+
 # Distribution / packaging
 .Python
 build/
@@ -127,14 +135,6 @@ celerybeat.pid
 # SageMath parsed files
 *.sage.py
 
-# Environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
 
 # Spyder project settings
 .spyderproject
@@ -178,4 +178,5 @@ cython_debug/
 #  exclude from AI features like autocomplete and code analysis. Recommended for sensitive data
 #  refer to https://docs.cursor.com/context/ignore-files
 .cursorignore
-.cursorindexingignore
+.cursorindexingignore. e n v  
+ 

@@ -1,6 +1,6 @@
 import { loadQuestion } from './quizApi.js';
 import { startTimer, stopTimer, recordTime, resetTimer, questionTimes } from './timer.js';
-import { renderQuestion, showSummary, showReview } from './quizUI.js';
+import { renderQuestion, showSummary, showReview, showHistory } from './quizUI.js';
 
 let questionHistory = JSON.parse(sessionStorage.getItem("questionHistory") || "[]");
 
@@ -95,6 +95,19 @@ export function exportResults() {
   a.href = url;
   a.download = filename;
   a.click();
+}
+
+//to show history
+export function showHistory(history,) {
+  const historyDiv = document.getElementById("history");
+
+  historyDiv.innerHTML = "<h3>Answer History:</h3>";
+  history.forEach((entry, index) => {
+    const line = document.createElement("p");
+    line.textContent = `Q${index + 1}: ${entry.question} - Your Answer: ${entry.userAnswer} - Correct: ${entry.correct}`;
+    historyDiv.appendChild(line);
+  });
+
 }
 
 export function restartQuiz() {
