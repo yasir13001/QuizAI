@@ -1,6 +1,6 @@
 import { loadQuestion } from './quizApi.js';
 import { startTimer, stopTimer, recordTime, resetTimer, questionTimes } from './timer.js';
-import { renderQuestion, showSummary, showReview } from './quizUI.js';
+import { renderQuestion, showSummary, showReview, showHistory } from './quizUI.js';
 
 let questionHistory = JSON.parse(sessionStorage.getItem("questionHistory") || "[]");
 
